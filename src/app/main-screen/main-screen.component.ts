@@ -17,9 +17,7 @@ export class MainScreenComponent implements OnInit {
 	ngOnInit(): void {
 		this.session.session.subscribe(
 			data => {
-				console.log(data);
 				if(typeof(data) == "undefined") {
-					console.log("yay");
 					this.router.navigateByUrl("/login-screen");
 				}
 			}

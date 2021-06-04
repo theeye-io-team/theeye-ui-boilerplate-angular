@@ -31,16 +31,7 @@ export class SessionService {
 	});
 	
 	constructor() {
-		if(localStorage.getItem("isLogged") == "true") {
-			this.s = {
-				//@ts-ignore
-				email: localStorage.getItem("email"),
-				//@ts-ignore
-				token: localStorage.getItem("token"),
-				//@ts-ignore
-				credential: localStorage.getItem("credential"),
-			}
-		}
+		this.refreshLogin();
 	}
 
 	login(email: string, password: string) {
@@ -65,7 +56,6 @@ export class SessionService {
 						token: response.body.access_token,
 						credential: response.body.credential
 					};
-					console.log(typeof(this.s));
 					this.store()
 				});
 		}
@@ -76,11 +66,24 @@ export class SessionService {
 		localStorage.removeItem("isLogged");
 	}
 
-	store() {
+	private store() {
 		if(this.s) {
 			localStorage.setItem("isLogged", 'true');
 			for (const [key, value] of Object.entries(this.s)) {
   				localStorage.setItem(key, value);
+			}
+		}
+	}
+
+	refreshLogin() {
+		if(localStorage.getItem("isLogged") == "true") {
+			this.s = {
+				//@ts-ignore
+				email: localStorage.getItem("email"),
+				//@ts-ignore
+				token: localStorage.getItem("token"),
+				//@ts-ignore
+				credential: localStorage.getItem("credential"),
 			}
 		}
 	}

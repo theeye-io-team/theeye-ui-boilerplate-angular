@@ -44,17 +44,14 @@ export class LoginScreenComponent implements OnInit {
 	} */
 
 	login(email: string, password: string) {
+		console.log("Iniciando sesión");
 		this.session.login(email, password);
-		
-		
 	}
 
 	ngOnInit(): void {
 		this.session.session.subscribe(
 			data => {
-				console.log(data);
 				if(typeof(data) != "undefined") {
-					console.log("yay");
 					this.router.navigateByUrl("/main-screen");
 				}
 			}
