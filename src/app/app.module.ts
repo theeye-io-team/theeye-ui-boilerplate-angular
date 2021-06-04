@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginScreenComponent } from './login-screen/login-screen.component';
 import { MainScreenComponent } from './main-screen/main-screen.component';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { MainScreenComponent } from './main-screen/main-screen.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-	HttpClientModule
+	HttpClientModule,
+	StoreModule.forRoot({}, {})
   ],
   providers: [],
   bootstrap: [AppComponent]

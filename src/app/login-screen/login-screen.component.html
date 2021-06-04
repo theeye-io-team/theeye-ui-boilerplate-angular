@@ -1,17 +1,15 @@
-<p>login-screen works!</p>
-
-<h2>Login</h2>
-<div>
-	<div>
-		<input type="text" name="email" placeholder="email" #email required>
+<div class="container">
+	<div class="logo">
+		<img src="assets/logo.png" alt="TheEye">
+		<p>Adding value to humen talent by automating repetitive tasks.</p>
 	</div>
-	<div>
-		<input type="password" name="password" placeholder="password" #password required>
+	<div class="login-container">
+			<div class="title">Sign in</div>
+			<div class="form">
+				<input type="text" name="email" placeholder="e-mail" #email required>
+				<input type="password" name="password" placeholder="password" #password required>
+				<button (click)="login(email.value, password.value)" class="submit-btn">SIGN IN</button>
+		</div>
 	</div>
-
-	<div>
-		<button (click)="login(email.value, password.value)" class="submit-btn">Iniciar Session</button>
-	</div>
+	<footer class="footer"><a href="https://theeye.io/">theeye.io</a> | Copyright © 2021 THEEYE INC.</footer>
 </div>
-
-<!-- <a href="/main-screen" >Main</a> -->

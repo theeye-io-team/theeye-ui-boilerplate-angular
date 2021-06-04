@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Router } from '@angular/router';
+import { SessionService } from '../api/session/session.service';
 @Component({
   selector: 'app-main-screen',
   templateUrl: './main-screen.component.html',
@@ -7,9 +8,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainScreenComponent implements OnInit {
 
-  constructor() { }
+	constructor(private session:SessionService, private router:Router) { }
 
-  ngOnInit(): void {
-  }
+	logout() {
+		this.session.logout();
+	}
 
+	ngOnInit(): void {
+		this.session.session.subscribe(
+			data => {
+				console.log(data);
+				if(typeof(data) == "undefined") {
+					console.log("yay");
+					this.router.navigateByUrl("/login-screen");
+				}
+			}
+		)
+	}
 }

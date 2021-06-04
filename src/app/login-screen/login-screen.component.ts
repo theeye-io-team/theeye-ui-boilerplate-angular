@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Session } from '../api/session/session';
-import http from 'superagent';
+import { SessionService } from '../api/session/session.service';
+// @ts-ignore 
+import http from 'superagent'; 
 
 import config from '../api/config/config';
 
@@ -14,9 +15,11 @@ const gateway = config.api.gateway;
 	styleUrls: ['./login-screen.component.less'],
 })
 export class LoginScreenComponent implements OnInit {
-	constructor(private router: Router) { }
 
-	login(email: string, password: string) {
+
+	constructor(private router: Router, private session: SessionService) { }
+
+	/* login(email: string, password: string) {
 		console.log([email, password]);
 		if (email && password) {
 			const url = gateway + '/auth/login';
@@ -29,17 +32,32 @@ export class LoginScreenComponent implements OnInit {
 				.end((err: any, response: any) => {
 					if (err) {
 						if (err.status === 401) {
-							// window.app.loader.hide();
+							// window.app.loader.hide(); //TODO: Implement
 							return;
 						}
 					}
 					let session = response.body;
 					console.log(session);
 					this.router.navigateByUrl("/main-screen");
-
 				});
 		}
+	} */
+
+	login(email: string, password: string) {
+		this.session.login(email, password);
+		
+		
 	}
 
-	ngOnInit(): void { }
+	ngOnInit(): void {
+		this.session.session.subscribe(
+			data => {
+				console.log(data);
+				if(typeof(data) != "undefined") {
+					console.log("yay");
+					this.router.navigateByUrl("/main-screen");
+				}
+			}
+		)
+	}
 }
