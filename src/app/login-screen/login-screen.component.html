@@ -1,15 +1,28 @@
+<app-load-screen *ngIf="showOverlay"></app-load-screen>
 <div class="container">
 	<div class="logo">
 		<img src="assets/logo.png" alt="TheEye">
-		<p>Adding value to humen talent by automating repetitive tasks.</p>
+		<p>Adding value to human talent by automating repetitive tasks.</p>
 	</div>
 	<div class="login-container">
-			<div class="title">Sign in</div>
-			<div class="form">
-				<input type="text" name="email" placeholder="e-mail" #email required>
-				<input type="password" name="password" placeholder="password" #password required>
-				<button (click)="login(email.value, password.value)" class="submit-btn">SIGN IN</button>
-		</div>
+			<!-- <div class="title">Sign in</div> -->
+			<form class="form">
+				<mat-form-field appearance="fill">
+					<mat-label>Email</mat-label>
+					<input matInput type="text" [formControl]="email" required name="email" placeholder="someone@theeye.io">
+					<mat-error *ngIf="email.invalid">{{getErrorMessage(email)}}</mat-error>
+				</mat-form-field>
+				<mat-form-field appearance="fill">
+					<mat-label>Password</mat-label>
+					<input matInput type="password" [(ngModel)]="password" name="password" required placeholder="Should be strong...">
+				</mat-form-field>
+				<mat-form-field *ngIf="!disabledCustomer" appearance="fill">
+					<mat-label>Customer</mat-label>
+					<input matInput type="text" [(ngModel)]="customer" name="customer" placeholder="Blank for default...">
+				</mat-form-field>
+				<button type="submit" mat-flat-button color="primary" (click)="login()">Sign in</button>
+				<mat-error *ngIf="errorDiv">ERROR: {{errorDiv}}</mat-error>
+			</form>
 	</div>
-	<footer class="footer"><a href="https://theeye.io/">theeye.io</a> | Copyright © 2021 THEEYE INC.</footer>
 </div>
+<app-footer></app-footer>

@@ -1,0 +1,82 @@
+.header-table {
+    width: 100%;
+    border-bottom: 1px solid #ddd!important;
+    table-layout: fixed;
+}
+
+
+.brand {
+    height: 50px!important;
+	padding:.3125rem 0 .3125rem 15px;
+}
+
+.client {
+    height: 50px;
+    color:grey;
+    text-align:center;
+
+}
+
+.profile {
+    text-align:right;
+    padding-right: 15px;
+    font-size: 14px!important;
+	color:#004e96
+}
+
+a:hover {
+	cursor: pointer;
+}
+table {
+	border-spacing:0
+}
+select {
+	border:0;
+	margin:0 10px;
+	color:#004e96;
+	background:#f6f6f6;
+	border:none!important;
+	outline:none!important
+}
+header {
+	top: 0;
+	left: 0;
+	right: 0;
+	background: #f6f6f6;
+	z-index:9999;
+	font-family: 'Montserrat', sans-serif;
+}
+
+.username img {margin-left:5px}
+
+.profile button {		
+	border-radius: 0;
+	padding: 5px 20px 3px 20px!important;
+	background: #004e96;
+	border: none;
+	color: #fff;
+	text-transform:uppercase;
+	font-weight:600
+}
+.profile button i {font-size:1.2em}
+
+
+@media (max-width: 767px) {
+	.profile button {margin-right:0}
+	.header-table td {float:left}
+	.header-table td:last-child {
+		float:right;
+		padding-top:12px;
+	}
+	.username span {
+		max-width:70px;
+	    white-space: nowrap;
+	    overflow: hidden;
+  		text-overflow: ellipsis;
+		float:left;
+		padding-top:3px
+	}
+	select {
+	margin:0 5px;
+}
+}

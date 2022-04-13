@@ -1,13 +1,9 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { SessionService } from '../api/session/session.service';
-// @ts-ignore 
-import http from 'superagent'; 
+import { Config } from '../api/config/config';
+import {FormControl, Validators} from '@angular/forms';
 
-import config from '../api/config/config';
-
-const gateway = config.api.gateway;
 
 @Component({
 	selector: 'login-screen',
@@ -16,44 +12,73 @@ const gateway = config.api.gateway;
 })
 export class LoginScreenComponent implements OnInit {
 
+	email:FormControl = new FormControl('', [Validators.required, Validators.email]);
+	password:string=''
+	customer:string=''
+	errorDiv: string = ''
+	disabledCustomer: boolean = Config.api.disabledCustomer
+	showOverlay:boolean=true
 
-	constructor(private router: Router, private session: SessionService) { }
+	constructor(private router: Router, private sessionService: SessionService) { }
 
-	/* login(email: string, password: string) {
-		console.log([email, password]);
-		if (email && password) {
-			const url = gateway + '/auth/login';
-			http
-				.post(url)
-				//.send({ username, password }) // query string
-				.set('accept', 'application/json')
-				.set('content-type', 'application/json')
-				.auth(email, password)
-				.end((err: any, response: any) => {
-					if (err) {
-						if (err.status === 401) {
-							// window.app.loader.hide(); //TODO: Implement
-							return;
-						}
-					}
-					let session = response.body;
-					console.log(session);
-					this.router.navigateByUrl("/main-screen");
-				});
+	getErrorMessage(field:FormControl) {
+		if (field.hasError('required')) {
+		  return 'You must enter a value';
 		}
-	} */
+	
+		return field.hasError('email') ? 'Not a valid email' : '';
+	  }
 
-	login(email: string, password: string) {
-		console.log("Iniciando sesión");
-		this.session.login(email, password);
+	login = async () => {
+		this.showOverlay = true
+		//console.log("Iniciando sesión...")
+		this.errorDiv = ''
+		try {
+			//console.log(this.email.hasError('required'))
+			//console.log(this.email.hasError('email'))
+			if(!this.email.hasError('required') && !this.email.hasError('email') && this.disabledCustomer) {
+				await this.sessionService.login(this.email.value, this.password, Config.api.customer)
+			}
+
+			if(!this.email.hasError('required') && !this.email.hasError('email') && !this.disabledCustomer) {
+				await this.sessionService.login(this.email.value, this.password, this.customer)
+			}
+			this.showOverlay = false
+			
+		} catch(e:any) {
+			if(e.status === 500) {
+				this.errorDiv=e.message
+			}
+			if(e.status === 403) {
+				this.errorDiv = 'Credentials lack privileges for selected customer.'
+				//console.log('Forbidden')
+			}
+
+			if(e.status === 401) {
+				this.errorDiv = 'Invalid authentication credentials.'
+				//console.log('Unauthorized')
+			}
+
+			if(e.status === 404) {
+				this.errorDiv = 'Gateway is unreachable.'
+				//console.log('Unreachable')
+			}
+		}
+		
 	}
 
 	ngOnInit(): void {
-		this.session.session.subscribe(
+		this.sessionService.activeSession.subscribe(
 			data => {
-				if(typeof(data) != "undefined") {
+				if(data.email && data.token) {
 					this.router.navigateByUrl("/main-screen");
 				}
+
+				if(data.customer) {
+					this.customer = data.customer
+				}
+
+				this.showOverlay=false
 			}
 		)
 	}

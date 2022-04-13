@@ -1,89 +1,107 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-// @ts-ignore 
-import http from 'superagent'; 
-import config from '../config/config';
+import { Cookie } from 'src/app/common/interfaces';
+import { RequestService } from 'src/app/services/request.service';
+import { Config } from '../config/config';
 
-const gateway = config.api.gateway;
-
-type cookie = {
-	email: string
-	token: string
-	credential: string
-} | undefined
 
 @Injectable({
   providedIn: 'root'
 })
 export class SessionService {
 
-	private s: cookie
+	private sessionCookie: Cookie = {
+		email: null,
+		token: null,
+		credential: null,
+		customer:null
+	}
 
-	session = new Observable(obs => {
-		let previousStream: cookie;
-		obs.next(this.s)
-		setInterval(() => { 
-			if (previousStream != this.s){
-				obs.next(this.s)
-				previousStream = this.s;
+	private customer:string = Config.api.customer
+
+	activeSession = new Observable<any>(sessionObservable => {
+		let previousStream: Cookie
+		setInterval(() => {
+			if (previousStream !== this.sessionCookie){
+				sessionObservable.next(this.sessionCookie)
+				previousStream = this.sessionCookie
 			}
 		}, 500)
 	});
 	
-	constructor() {
-		this.refreshLogin();
+	constructor(private requestService:RequestService) {
+		this.refreshLogin()
 	}
 
-	login(email: string, password: string) {
-		console.log([email, password]);
-		if (email && password) {
-			const url = gateway + '/auth/login';
-			http
-				.post(url)
-				//.send({ username, password }) // query string
-				.set('accept', 'application/json')
-				.set('content-type', 'application/json')
-				.auth(email, password)
-				.end((err: any, response: any) => {
-					if (err) {
-						if (err.status === 401) {
-							// window.app.loader.hide(); //TODO: Implement
-							return;
-						}
+	getLoginData = async (email:string, password:string, customer:string | null):Promise<any> => {
+		return new Promise((resolve, reject) => {
+			// Se le puede pasar this.customer en caso de que sea customer fijo por config
+			this.requestService.login(email,password,customer)
+				.subscribe({
+					next: data => {
+						//console.log('getLoginData: Fetched res data')
+						resolve(data)
+					},
+					error: error => {
+						console.error('getLoginData: Error requesting data!')
+						this.logout()
+						reject(error)
 					}
-					this.s = {
-						email: email,
-						token: response.body.access_token,
-						credential: response.body.credential
-					};
-					this.store()
-				});
-		}
+				}
+			)
+		})
 	}
 
-	logout() {
-		this.s = undefined;
-		localStorage.removeItem("isLogged");
+	login = async (email: string, password: string, customer:string | null):Promise<void> => {
+		return new Promise(async (resolve, reject) => {
+			if (email && password) {
+				let credentialsData
+				try {
+					credentialsData = await this.getLoginData(email, password, customer || localStorage.getItem('customer'))
+					this.sessionCookie = {
+						email: email,
+						token: credentialsData.access_token,
+						credential: credentialsData.credential,
+						customer: customer
+					}
+		
+					resolve(this.store())
+				} catch (e) {
+					reject(e)
+				}
+			} else {
+				reject({message:'Username or password is blank.', status:500})
+			}
+		})
+		
+	}
+
+	logout = () => {
+		this.sessionCookie = {
+			email:null,
+			credential:null,
+			token:null,
+			customer: localStorage.getItem('customer')
+		}
+		localStorage.removeItem('isLogged')
 	}
 
 	private store() {
-		if(this.s) {
-			localStorage.setItem("isLogged", 'true');
-			for (const [key, value] of Object.entries(this.s)) {
-  				localStorage.setItem(key, value);
+		if(this.sessionCookie) {
+			localStorage.setItem('isLogged', 'true');
+			for (const [key, value] of Object.entries(this.sessionCookie)) {
+  				localStorage.setItem(key, value)
 			}
 		}
 	}
 
-	refreshLogin() {
-		if(localStorage.getItem("isLogged") == "true") {
-			this.s = {
-				//@ts-ignore
-				email: localStorage.getItem("email"),
-				//@ts-ignore
-				token: localStorage.getItem("token"),
-				//@ts-ignore
-				credential: localStorage.getItem("credential"),
+	refreshLogin = () => {
+		if(localStorage.getItem('isLogged') === 'true') {
+			this.sessionCookie = {
+				email: localStorage.getItem('email') || null,
+				token: localStorage.getItem('token') || null,
+				credential: localStorage.getItem('credential') || null,
+				customer: localStorage.getItem('customer') || null
 			}
 		}
 	}

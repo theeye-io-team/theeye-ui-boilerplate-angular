@@ -1,0 +1,25 @@
+<header>
+    <table class="header-table">
+        <tr>
+            <td>
+                <div class="brand">
+                    <button mat-button (click)="rootScreen()"><img class="brand" src="{{logo}}" alt="The Eye"></button>
+                </div>
+            </td>
+            <td>
+                <div class="client">
+                    <!-- <img class="client" src="{{client_logo}}" alt="{{title}}"> -->
+                    LOGO EMPRESA
+                </div>
+            </td>
+            <td class="profile">
+                <div>
+                    {{userEmail}} - {{userRole}}
+                    <button type="button" *ngIf="userEmail && userRole" class="btn btn-danger btn-sm" (click)="logout()">
+                        Salir
+                    </button>
+                </div>
+            </td>
+        </tr>
+    </table>
+</header>

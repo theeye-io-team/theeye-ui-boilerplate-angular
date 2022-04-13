@@ -1,0 +1,25 @@
+.header-table {
+    width: 100%;
+    border-bottom: 1px solid grey;
+    table-layout: fixed;
+}
+
+td {
+    width: 33%;
+}
+
+.brand {
+    height: 80px;
+}
+
+.client {
+    height: 40px;
+    color:grey;
+    text-align:center;
+
+}
+
+.profile {
+    text-align:right;
+    font-size: large;
+}

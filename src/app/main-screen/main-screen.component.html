@@ -1,2 +1,7 @@
-<p>Logged in!</p>
-<button (click)="logout()">Log out</button>
+<app-load-screen *ngIf="showOverlay"></app-load-screen>
+
+<app-header></app-header>
+
+Logged in: <b>{{customer}}</b>
+
+<app-footer></app-footer>

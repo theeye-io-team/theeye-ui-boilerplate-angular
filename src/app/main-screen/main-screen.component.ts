@@ -7,19 +7,23 @@ import { SessionService } from '../api/session/session.service';
   styleUrls: ['./main-screen.component.less']
 })
 export class MainScreenComponent implements OnInit {
-
+	
+	showOverlay:boolean=true
+	customer!:String
 	constructor(private session:SessionService, private router:Router) { }
 
 	logout() {
-		this.session.logout();
+		this.session.logout()
 	}
 
 	ngOnInit(): void {
-		this.session.session.subscribe(
+		this.session.activeSession.subscribe(
 			data => {
-				if(typeof(data) == "undefined") {
+				if(!data.email && !data.token) {
 					this.router.navigateByUrl("/login-screen");
 				}
+				this.customer = data.customer
+				this.showOverlay=false
 			}
 		)
 	}
