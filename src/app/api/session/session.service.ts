@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Cookie } from 'src/app/common/interfaces';
+import { TheeyeCredential } from 'src/app/common/interfaces';
 import { RequestService } from 'src/app/services/request.service';
 import { Config } from '../config/config';
 
@@ -10,7 +10,7 @@ import { Config } from '../config/config';
 })
 export class SessionService {
 
-	private sessionCookie: Cookie = {
+	private sessionCookie: TheeyeCredential = {
 		email: null,
 		token: null,
 		credential: null,
@@ -20,7 +20,7 @@ export class SessionService {
 	private customer:string = Config.api.customer
 
 	activeSession = new Observable<any>(sessionObservable => {
-		let previousStream: Cookie
+		let previousStream: TheeyeCredential
 		setInterval(() => {
 			if (previousStream !== this.sessionCookie){
 				sessionObservable.next(this.sessionCookie)

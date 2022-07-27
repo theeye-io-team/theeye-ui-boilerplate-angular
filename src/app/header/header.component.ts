@@ -15,7 +15,7 @@ export class HeaderComponent implements OnInit {
   userCustomer: String = ''
   userUsername: String = ''
   title = ''
-  logo = 'assets/logo.png'
+  logo = 'assets/logo.svg'
   username = 'assets/username.png'
   client_logo = 'assets/client_logo.png'
 
