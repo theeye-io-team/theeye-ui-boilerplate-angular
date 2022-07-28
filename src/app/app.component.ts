@@ -8,9 +8,8 @@ import { Router } from '@angular/router';
 })
 export class AppComponent implements OnInit{
 	constructor(private router:Router){}
-  title = 'bolierplate-ag';
+  title = 'boilerplate-ag';
+  
   ngOnInit() {
-	this.router.navigateByUrl("/login-screen");
-
   }
 }

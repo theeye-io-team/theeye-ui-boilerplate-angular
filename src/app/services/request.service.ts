@@ -1,19 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Config } from '../api/config/config';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RequestService {
 
-  private filesUrl = `${Config.api.supervisor}/${Config.api.customer}/file`
-
   constructor(private http: HttpClient) { }
 
   login = (email:string, password:string, customer:string|null):Observable<any> => {
-    const url = `${Config.api.gateway}/auth/login?customer=${customer}`
+    const url = `${environment.api.gateway}/auth/login?customer=${customer}`
     const body = {}
     const headers = {
       'Content-Type': 'application/json', 

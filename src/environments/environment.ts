@@ -3,7 +3,14 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  api: {
+		gateway: 'https://app.theeye.io/api',
+		supervisor: 'https://supervisor.theeye.io',
+		sync: 'https://sync.theeye.io',
+		customer: '',
+		disabledCustomer:false,
+	}
 };
 
 /*

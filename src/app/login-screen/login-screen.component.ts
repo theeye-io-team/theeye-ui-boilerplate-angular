@@ -1,7 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { SessionService } from '../api/session/session.service';
-import { Config } from '../api/config/config';
+import { environment } from '../../environments/environment';
 import {FormControl, Validators} from '@angular/forms';
 
 
@@ -16,7 +16,7 @@ export class LoginScreenComponent implements OnInit {
 	password:string=''
 	customer:string=''
 	errorDiv: string = ''
-	disabledCustomer: boolean = Config.api.disabledCustomer
+	disabledCustomer: boolean = environment.api.disabledCustomer
 	showOverlay:boolean=true
 
 	constructor(private router: Router, private sessionService: SessionService) { }
@@ -37,7 +37,7 @@ export class LoginScreenComponent implements OnInit {
 			//console.log(this.email.hasError('required'))
 			//console.log(this.email.hasError('email'))
 			if(!this.email.hasError('required') && !this.email.hasError('email') && this.disabledCustomer) {
-				await this.sessionService.login(this.email.value, this.password, Config.api.customer)
+				await this.sessionService.login(this.email.value, this.password, environment.api.customer)
 			}
 
 			if(!this.email.hasError('required') && !this.email.hasError('email') && !this.disabledCustomer) {

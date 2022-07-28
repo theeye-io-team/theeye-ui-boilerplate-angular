@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TheeyeCredential } from 'src/app/common/interfaces';
 import { RequestService } from 'src/app/services/request.service';
-import { Config } from '../config/config';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable({
@@ -17,7 +17,7 @@ export class SessionService {
 		customer:null
 	}
 
-	private customer:string = Config.api.customer
+	private customer:string = environment.api.customer
 
 	activeSession = new Observable<any>(sessionObservable => {
 		let previousStream: TheeyeCredential
