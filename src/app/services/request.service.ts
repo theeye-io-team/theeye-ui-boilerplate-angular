@@ -7,7 +7,6 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class RequestService {
-
   constructor(private http: HttpClient) { }
 
   login = (email:string, password:string, customer:string|null):Observable<any> => {
@@ -20,6 +19,16 @@ export class RequestService {
     }
 
     return this.http.post<any>(url,body,{headers})             
+
+  }
+
+  profile = (accessToken:string):Observable<any> => {
+    const url = `${environment.api.gateway}/session/profile`
+    const headers = {
+      'Authorization':`Bearer ${accessToken}`
+    }
+
+    return this.http.get<any>(url,{headers})             
 
   }
 }

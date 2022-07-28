@@ -69,15 +69,16 @@ export class LoginScreenComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.sessionService.activeSession.subscribe(
-			data => {
+			async data => {
 				if(data.email && data.token) {
+					if(data.customer) {
+						this.customer = data.customer
+					} else {
+						const profile = await this.sessionService.getProfileData(data.token)
+						this.sessionService.setCustomer(profile.current_customer.name)
+					}
 					this.router.navigateByUrl("/main-screen");
 				}
-
-				if(data.customer) {
-					this.customer = data.customer
-				}
-
 				this.showOverlay=false
 			}
 		)

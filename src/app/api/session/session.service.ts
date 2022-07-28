@@ -52,6 +52,25 @@ export class SessionService {
 		})
 	}
 
+	getProfileData = async (token:string):Promise<any> => {
+		return new Promise((resolve, reject) => {
+			// Se le puede pasar this.customer en caso de que sea customer fijo por config
+			this.requestService.profile(token)
+				.subscribe({
+					next: data => {
+						//console.log('getLoginData: Fetched res data')
+						resolve(data)
+					},
+					error: error => {
+						console.error('getProfileData: Error requesting data!')
+						this.logout()
+						reject(error)
+					}
+				}
+			)
+		})
+	}
+
 	login = async (email: string, password: string, customer:string | null):Promise<void> => {
 		return new Promise(async (resolve, reject) => {
 			if (email && password) {
@@ -74,6 +93,10 @@ export class SessionService {
 			}
 		})
 		
+	}
+
+	setCustomer = (customer:string) => {
+		this.sessionCookie.customer = customer
 	}
 
 	logout = () => {

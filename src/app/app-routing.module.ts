@@ -6,7 +6,9 @@ import { MainScreenComponent } from './main-screen/main-screen.component';
 
 const routes: Routes = [
 	{ path: "login-screen", component: LoginScreenComponent },
-	{ path: "main-screen",  component: MainScreenComponent  }
+	{ path: "main-screen",  component: MainScreenComponent  },
+  { path: "**", component: LoginScreenComponent },
+
 ];
 
 @NgModule({
